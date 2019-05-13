@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', '新增收货地址')
+@section('title', ($userAddress->id ? '修改': '新增') . '收货地址')
 
 @section('content')
     <div class="row">
@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-header">
                     <h2 class="text-center">
-                        新增收货地址
+                        {{ $userAddress->id ? '修改': '新增' }}收货地址
                     </h2>
                 </div>
                 <div class="card-body">
@@ -25,12 +25,16 @@
                 <!-- 输出后端报错结束 -->
                     <!-- inline-template 代表通过内联方式引入组件 -->
                     <user-addresses-create-and-edit inline-template>
-                        <form class="form-horizontal" action="{{ route('user_addresses.store') }}" method="post"
-                              role="form">
+                        @if($userAddress->id)
+                            <form class="form-horizontal" role="form" action="{{ route('user_addresses.update', [$userAddress->id]) }}" method="post">
+                                {{ method_field('PUT') }}
+                                @else
+                                    <form class="form-horizontal" role="form" action="{{ route('user_addresses.store') }}" method="post">
+                                    @endif
                             <!-- 引入 csrf token 字段 -->
                         {{ csrf_field() }}
                         <!-- 注意这里多了 @change -->
-                            <select-district @change="onDistrictChanged" inline-template>
+                            <select-district :init-value="{{ json_encode([$userAddress->province, $userAddress->city, $userAddress->district]) }}" @change="onDistrictChanged" inline-template>
                                 <div class="form-group row">
                                     <label class="col-form-label col-sm-2 text-md-right">省市区</label>
                                     <div class="col-sm-3">
@@ -63,28 +67,28 @@
                                 <label class="col-form-label text-md-right col-sm-2">详细地址</label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control" name="address"
-                                           value="{{ old('address', $address->address) }}">
+                                           value="{{ old('address', $userAddress->address) }}">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-form-label text-md-right col-sm-2">邮编</label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control" name="zip"
-                                           value="{{ old('zip', $address->zip) }}">
+                                           value="{{ old('zip', $userAddress->zip) }}">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-form-label text-md-right col-sm-2">姓名</label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control" name="contact_name"
-                                           value="{{ old('contact_name', $address->contact_name) }}">
+                                           value="{{ old('contact_name', $userAddress->contact_name) }}">
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-form-label text-md-right col-sm-2">电话</label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control" name="contact_phone"
-                                           value="{{ old('contact_phone', $address->contact_phone) }}">
+                                           value="{{ old('contact_phone', $userAddress->contact_phone) }}">
                                 </div>
                             </div>
                             <div class="form-group row text-center">
