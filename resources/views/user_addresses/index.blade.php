@@ -31,7 +31,9 @@
                                 <td>{{ $address->contact_phone }}</td>
                                 <td>
                                     <a href="{{ route('user_addresses.edit',[$address->id]) }}" class="btn btn-primary">修改</a>
-                                    <button class="btn btn-danger btn-del-address" type="button" data-url="{{ route('user_addresses.destroy',[$address->id]) }}">删除</button>
+                                    <button class="btn btn-danger btn-del-address" type="button"
+                                            data-url="{{ route('user_addresses.destroy',[$address->id]) }}">删除
+                                    </button>
                                 </td>
                             </tr>
                         @endforeach
@@ -45,9 +47,9 @@
 
 @section('scriptsAfterJs')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // 删除按钮点击事件
-            $('.btn-del-address').click(function() {
+            $('.btn-del-address').click(function () {
                 // 获取按钮上 data-id 属性的值，也就是地址 ID
                 var url = $(this).data('url');
                 // 调用 sweetalert
@@ -57,7 +59,7 @@
                     buttons: ['取消', '确定'],
                     dangerMode: true,
                 })
-                    .then(function(willDelete) { // 用户点击按钮后会触发这个回调函数
+                    .then(function (willDelete) { // 用户点击按钮后会触发这个回调函数
                         // 用户点击确定 willDelete 值为 true， 否则为 false
                         // 用户点了取消，啥也不做
                         if (!willDelete) {
