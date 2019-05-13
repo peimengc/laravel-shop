@@ -5,7 +5,12 @@
     <div class="row">
         <div class="col-md-10 offset-md-1">
             <div class="card panel-default">
-                <div class="card-header">收货地址列表</div>
+                <div class="card-header">
+                    收货地址列表
+                    <a href="{{ route('user_addresses.create') }}" class="btn btn-info float-right">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i>新增
+                    </a>
+                </div>
                 <div class="card-body">
                     <table class="table table-bordered table-striped">
                         <thead>
