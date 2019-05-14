@@ -79,6 +79,7 @@
 @endsection
 
 @section('scriptsAfterJs')
+    {{--sku库存价格--}}
     <script>
         $(document).ready(function () {
             $('[data-toggle="tooltip"]').tooltip({trigger: 'hover'});
@@ -88,6 +89,7 @@
             });
         });
     </script>
+    {{--收藏--}}
     <script>
         $('.btn-favor').click(function () {
             axios.post('{{ route('products.favor',[$product->id]) }}')
@@ -129,6 +131,39 @@
                         swal('系统错误', '', 'error');
                     }
                 })
+        })
+    </script>
+    {{--加入购物车--}}
+    <script>
+        $('.btn-add-to-cart').click(function () {
+            axios.post('{{ route('cart.add') }}', {
+                sku_id: $('label.active input[name=skus]').val(),
+                amount: $('.cart_amount input').val(),
+            }).then(function () {
+                swal('成功加入购物车', '', 'success');
+            }, function (error) {
+                if (error.response.status === 401) {
+
+                    // http 状态码为 401 代表用户未登陆
+                    swal('请先登录', '', 'error');
+
+                } else if (error.response.status === 422) {
+
+                    // http 状态码为 422 代表用户输入校验失败
+                    var html = '<div>';
+                    _.each(error.response.data.errors, function (errors) {
+                        _.each(errors, function (error) {
+                            html += error+'<br>';
+                        })
+                    });
+                    html += '</div>';
+                    swal({content: $(html)[0], icon: 'error'})
+                } else {
+
+                    // 其他情况应该是系统挂了
+                    swal('系统错误', '', 'error');
+                }
+            })
         })
     </script>
 @endsection
