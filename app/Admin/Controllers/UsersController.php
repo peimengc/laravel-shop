@@ -22,7 +22,6 @@ class UsersController extends Controller
     {
         return $content
             ->header('用户列表')
-            ->description('description')
             ->body($this->grid());
     }
 
@@ -47,6 +46,8 @@ class UsersController extends Controller
 
         $grid->disableCreateButton();
 
+//        $grid->disableActions();
+        
         $grid->actions(function ($actions) {
             // 不在每一行后面展示查看按钮
             $actions->disableView();
