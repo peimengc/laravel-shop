@@ -31,14 +31,14 @@
                                                data-toggle="tooltip"
                                                title="{{ $sku->description }}"
                                                data-placement="bottom">
-                                            <input type="radio" name="skus" autocomplete="off"
+                                            <input autocomplete="off" name="skus" type="radio"
                                                    value="{{ $sku->id }}"> {{ $sku->title }}
                                         </label>
                                     @endforeach
                                 </div>
                             </div>
                             <div class="cart_amount">
-                                <label>数量</label>
+                                <span>数量</span>
                                 <input type="text" class="form-control form-control-sm" value="1">
                                 <span>件</span>
                                 <span class="stock"></span>
