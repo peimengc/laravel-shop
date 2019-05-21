@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Order extends Model
 {
@@ -17,17 +18,17 @@ class Order extends Model
     const SHIP_STATUS_RECEIVED = 'received';
 
     public static $refundStatusMap = [
-        self::REFUND_STATUS_PENDING    => '未退款',
-        self::REFUND_STATUS_APPLIED    => '已申请退款',
+        self::REFUND_STATUS_PENDING => '未退款',
+        self::REFUND_STATUS_APPLIED => '已申请退款',
         self::REFUND_STATUS_PROCESSING => '退款中',
-        self::REFUND_STATUS_SUCCESS    => '退款成功',
-        self::REFUND_STATUS_FAILED     => '退款失败',
+        self::REFUND_STATUS_SUCCESS => '退款成功',
+        self::REFUND_STATUS_FAILED => '退款失败',
     ];
 
     public static $shipStatusMap = [
-        self::SHIP_STATUS_PENDING   => '未发货',
+        self::SHIP_STATUS_PENDING => '未发货',
         self::SHIP_STATUS_DELIVERED => '已发货',
-        self::SHIP_STATUS_RECEIVED  => '已收货',
+        self::SHIP_STATUS_RECEIVED => '已收货',
     ];
 
     protected $fillable = [
@@ -48,11 +49,11 @@ class Order extends Model
     ];
 
     protected $casts = [
-        'closed'    => 'boolean',
-        'reviewed'  => 'boolean',
-        'address'   => 'json',
+        'closed' => 'boolean',
+        'reviewed' => 'boolean',
+        'address' => 'json',
         'ship_data' => 'json',
-        'extra'     => 'json',
+        'extra' => 'json',
     ];
 
     protected $dates = [
@@ -76,7 +77,7 @@ class Order extends Model
         });
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
@@ -92,7 +93,7 @@ class Order extends Model
         $prefix = date('YmdHis');
         for ($i = 0; $i < 10; $i++) {
             // 随机生成 6 位的数字
-            $no = $prefix.str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+            $no = $prefix . str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
             // 判断是否已经存在
             if (!static::query()->where('no', $no)->exists()) {
                 return $no;
@@ -102,4 +103,5 @@ class Order extends Model
 
         return false;
     }
+
 }
