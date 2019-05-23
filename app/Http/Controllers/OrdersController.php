@@ -13,6 +13,17 @@ use Illuminate\Http\Request;
 
 class OrdersController extends Controller
 {
+
+    public function index(Request $request)
+    {
+        $orders = $request->user()->orders()
+            ->with(['items.product', 'items.productSku'])
+            ->orderBy('created_at', 'desc')
+            ->paginate();
+
+        return view('orders.index', ['orders' => $orders]);
+    }
+
     public function store(OrderRequest $request)
     {
         //多个数据库操作 使用事务
