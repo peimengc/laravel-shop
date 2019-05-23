@@ -15,6 +15,8 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+    'order_ttl' => 1800,//订单失效时间 秒
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
