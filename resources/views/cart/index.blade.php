@@ -51,7 +51,7 @@
                                 </td>
                                 <td>
                                     <button class="btn btn-sm btn-danger btn-remove"
-                                            data-href="{{ route('cart.remove',[$item->id]) }}">移除
+                                            data-href="{{ route('cart.remove',[$item->productSku->id]) }}">移除
                                     </button>
                                 </td>
                             </tr>

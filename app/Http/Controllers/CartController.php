@@ -6,43 +6,46 @@ use App\Http\Requests\AddCartRequest;
 use App\Models\CartItem;
 use App\Models\ProductSku;
 use App\Models\User;
+use App\Services\CartService;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
+    protected $cartService;
+
+    /**
+     * CartController constructor.
+     * @param $cartService
+     */
+    public function __construct(CartService $cartService)
+    {
+        $this->cartService = $cartService;
+    }
+
     public function add(AddCartRequest $request)
     {
-        /** @var User $user */
-        $user = $request->user();
         $skuId = $request->get('sku_id');
         $amount = $request->get('amount');
 
-        //是否已经加入购物车
-        if ($cart = $user->cartItems()->where('psid', $skuId)->first()) {
-            $cart->update([
-                'amount' => $cart->amount + $amount,
-            ]);
-        } else {
-            $cart = new CartItem(['amount'=>$amount]);
-            $cart->user()->associate($user);
-            $cart->productSku()->associate($skuId);
-            $cart->save();
-        }
+        $cart = $this->cartService->add($skuId, $amount);
 
-        return [];
+        return [
+            'data' => $cart
+        ];
     }
 
     public function index(Request $request)
     {
-        $cartItems = $request->user()->cartItems()->with('productSku.product')->get();
-        $addresses = $request->user()->addresses()->orderBy('last_used_at','desc')->get();
 
-        return view('cart.index',compact('cartItems','addresses'));
+        $cartItems = $this->cartService->get();
+        $addresses = $request->user()->addresses()->orderBy('last_used_at', 'desc')->get();
+
+        return view('cart.index', compact('cartItems', 'addresses'));
     }
 
-    public function remove(Request $request,$cart_id)
+    public function remove(Request $request, ProductSku $sku)
     {
-        $request->user()->cartItems()->where('id', $cart_id)->delete();
+        $this->cartService->remove($sku->id);
 
         return [];
     }
