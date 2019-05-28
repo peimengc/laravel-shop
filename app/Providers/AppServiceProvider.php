@@ -23,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
         //往服务器中注入一个名为alipay的单例
         $this->app->singleton('alipay', function () {
             $config = config('pay.alipay');
+            $config['notify_url'] = 'http://f42f801b.ngrok.io/payment/alipay/notify';
+            $config['return_url'] = route('payment.alipay.return');
             if ($this->app->environment() !== 'production') {
                 $config['mode'] = 'dev';
                 $config['log']['level'] = 'debug';
