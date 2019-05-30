@@ -116,9 +116,6 @@
 @section('scriptsAfterJs')
     <script>
         $(document).ready(function() {
-        .
-        .
-        .
             // 确认收货按钮点击事件
             $('#btn-receive').click(function() {
                 // 弹出确认框
