@@ -102,27 +102,36 @@
                                         未支付
                                     @endif
                                 </div>
-                                @if(!$order->paid_at && !$order->closed)
-                                    <div class="payment-buttons">
-                                        <a class="btn btn-primary btn-sm"
-                                           href="{{ route('payment.alipay', ['order' => $order->id]) }}">支付宝支付</a>
-                                    </div>
-                                @endif
-                            <!-- 如果订单的发货状态为已发货则展示确认收货按钮 -->
-                                @if($order->ship_status === \App\Models\Order::SHIP_STATUS_DELIVERED)
-                                    <div class="receive-button">
-                                        <!-- 将原本的表单替换成下面这个按钮 -->
-                                        <button type="button" id="btn-receive" class="btn btn-sm btn-success">确认收货</button>
-                                    </div>
-                                @endif
 
-                            <!-- 订单已支付，且退款状态是未退款时展示申请退款按钮 -->
-                                @if($order->paid_at && $order->refund_status === \App\Models\Order::REFUND_STATUS_PENDING)
-                                    <div class="refund-button">
-                                        <button class="btn btn-sm btn-danger" id="btn-apply-refund">申请退款</button>
-                                    </div>
-                                @endif
                             </div>
+                            @if(isset($order->extra['refund_disagree_reason']))
+                                <div>
+                                    <span>拒绝退款理由：</span>
+                                    <div class="value">{{ $order->extra['refund_disagree_reason'] }}</div>
+                                </div>
+                            @endif
+                            @if(!$order->paid_at && !$order->closed)
+                                <div class="payment-buttons">
+                                    <a class="btn btn-primary btn-sm"
+                                       href="{{ route('payment.alipay', ['order' => $order->id]) }}">支付宝支付</a>
+                                </div>
+                            @endif
+                        <!-- 如果订单的发货状态为已发货则展示确认收货按钮 -->
+                            @if($order->ship_status === \App\Models\Order::SHIP_STATUS_DELIVERED)
+                                <div class="receive-button">
+                                    <!-- 将原本的表单替换成下面这个按钮 -->
+                                    <button type="button" id="btn-receive" class="btn btn-sm btn-success">确认收货
+                                    </button>
+                                </div>
+                            @endif
+
+                        <!-- 订单已支付，且退款状态是未退款时展示申请退款按钮 -->
+                            @if($order->paid_at && $order->refund_status === \App\Models\Order::REFUND_STATUS_PENDING)
+                                <div class="refund-button">
+                                    <button class="btn btn-sm btn-danger" id="btn-apply-refund">申请退款</button>
+                                </div>
+                            @endif
+
                         </div>
                     </div>
                 </div>
@@ -133,9 +142,9 @@
 
 @section('scriptsAfterJs')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // 确认收货按钮点击事件
-            $('#btn-receive').click(function() {
+            $('#btn-receive').click(function () {
                 // 弹出确认框
                 swal({
                     title: "确认已经收到商品？",
@@ -143,7 +152,7 @@
                     dangerMode: true,
                     buttons: ['取消', '确认收到'],
                 })
-                    .then(function(ret) {
+                    .then(function (ret) {
                         // 如果点击取消按钮则不做任何操作
                         if (!ret) {
                             return;
@@ -164,7 +173,7 @@
                     content: "input",
                 }).then(function (input) {
                     // 当用户点击 swal 弹出框上的按钮时触发这个函数
-                    if(!input) {
+                    if (!input) {
                         swal('退款理由不可空', '', 'error');
                         return;
                     }
