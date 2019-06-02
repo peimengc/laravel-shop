@@ -7,11 +7,8 @@ use App\Exceptions\InvalidRequestException;
 use App\Http\Requests\ApplyRefundRequest;
 use App\Http\Requests\OrderRequest;
 use App\Http\Requests\SendReviewRequest;
-use App\Jobs\CloseOrder;
 use App\Models\Order;
-use App\Models\ProductSku;
 use App\Models\UserAddress;
-use App\Services\CartService;
 use App\Services\OrderService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -29,7 +26,7 @@ class OrdersController extends Controller
         return view('orders.index', ['orders' => $orders]);
     }
 
-    public function show(Order $order, Request $request)
+    public function show(Order $order)
     {
         $this->authorize('own', $order);
         return view('orders.show', ['order' => $order->load(['items.productSku', 'items.product'])]);
@@ -45,7 +42,7 @@ class OrdersController extends Controller
 
     }
 
-    public function received(Order $order, Request $request)
+    public function received(Order $order)
     {
         // 校验权限
         $this->authorize('own', $order);
