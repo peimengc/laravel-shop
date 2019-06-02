@@ -142,6 +142,7 @@
                     address_id: $form.find('select[name=address]').val(),
                     remark: $form.find('textarea[name=remark]').val(),
                     items: [],
+                    coupon_code: $('input[name=coupon_code]').val(), // 从优惠码输入框中获取优惠码
                 };
 
                 $('table tr[data-id]').each(function () {
@@ -180,6 +181,9 @@
                             });
                             html += '</div>';
                             swal({content: $(html)[0], icon: 'error'})
+                        } else if (error.response.status === 403) {
+                            // 如果返回码是 403，说明有其他条件不满足
+                            swal(error.response.data.msg, '', 'error');
                         } else {
                             // 其他情况应该是系统挂了
                             swal('系统错误', '', 'error');
