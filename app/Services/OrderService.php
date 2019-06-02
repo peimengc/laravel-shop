@@ -14,15 +14,15 @@ use Carbon\Carbon;
 
 class OrderService
 {
-    public function add(User $user,UserAddress $address,$remark,$items,$coupon)
+    public function add(User $user, UserAddress $address, $remark, $items, $coupon)
     {
         // 如果传入了优惠券，则先检查是否可用
         if ($coupon) {
             // 但此时我们还没有计算出订单总金额，因此先不校验
-            $coupon->checkAvailable();
+            $coupon->checkAvailable($user);
         }
         //多个数据库操作 使用事务
-        $order = \DB::transaction(function () use ($user,$address,$remark,$items,$coupon) {
+        $order = \DB::transaction(function () use ($user, $address, $remark, $items, $coupon) {
             //更新地址最后使用时间
             $address->update(['last_used_at' => Carbon::now()]);
             //创建订单
@@ -62,7 +62,7 @@ class OrderService
             }
             if ($coupon) {
                 // 总金额已经计算出来了，检查是否符合优惠券规则
-                $coupon->checkAvailable($totalAmount);
+                $coupon->checkAvailable($user, $totalAmount);
                 // 把订单金额修改为优惠后的金额
                 $totalAmount = $coupon->getAdjustedPrice($totalAmount);
                 // 将订单与优惠券关联
