@@ -37,6 +37,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     //支付宝前端回调
     Route::get('payment/alipay/return', 'PaymentController@alipayReturn')->name('payment.alipay.return');
 
+    //优惠卷
+    Route::get('coupon_codes/{code}', 'CouponCodesController@show')->name('coupon_codes.show');
+
 });
 //支付宝服务端回调
 Route::post('payment/alipay/notify', 'PaymentController@alipayNotify')->name('payment.alipay.notify');
