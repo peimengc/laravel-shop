@@ -11,7 +11,7 @@ $factory->define(App\Models\Order::class, function (Faker $faker) {
     // 10% 的概率把订单标记为退款
     $refund = random_int(0, 10) < 1;
     // 随机生成发货状态
-    $ship = $faker->randomElement(array_keys(Order::$shipStatusMap));
+    $ship = $refund ? Order::SHIP_STATUS_RECEIVED :$faker->randomElement(array_keys(Order::$shipStatusMap));
     //优惠卷
     $coupon = null;
     //使用优惠卷 30%几率
